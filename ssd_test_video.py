@@ -1,6 +1,6 @@
 import os
-os.environ['CUDA_DEVICE_ORDER']='PCI_BUS_ID'
-os.environ['CUDA_VISIBLE_DEVICES']='3'
+#os.environ['CUDA_DEVICE_ORDER']='PCI_BUS_ID'
+#os.environ['CUDA_VISIBLE_DEVICES']='3'
 
 from vision.ssd.vgg_ssd import create_vgg_ssd, create_vgg_ssd_predictor
 from vision.ssd.mobilenetv1_ssd import create_mobilenetv1_ssd, create_mobilenetv1_ssd_predictor
@@ -28,7 +28,7 @@ net_type = "mb2-ssd-lite"
 
 # model_path = "models/mb1-ssd-Epoch-19-Loss-6.089628639675322.pth"
 # model_path = "models/mb1-ssd-Epoch-105-Loss-inf.pth"
-model_path = "models/mb2-ssd-lite-Epoch-35-Loss-inf.pth"
+model_path = "models/mb2-ssd-lite-Epoch-285-Loss-3.1724156065190092.pth"
 
 label_path = "models/voc-model-labels.txt"
 # --------------- #
@@ -58,7 +58,7 @@ elif net_type == 'mb1-ssd':
 elif net_type == 'mb1-ssd-lite':
 	predictor = create_mobilenetv1_ssd_lite_predictor(net, candidate_size=200)
 elif net_type == 'mb2-ssd-lite':
-	predictor = create_mobilenetv2_ssd_lite_predictor(net, candidate_size=200)
+	predictor = create_mobilenetv2_ssd_lite_predictor(net, candidate_size=200, device=None)
 elif net_type == 'sq-ssd-lite':
 	predictor = create_squeezenet_ssd_lite_predictor(net, candidate_size=200)
 else:
@@ -71,13 +71,14 @@ print("Loading Trained Model is Done!\n")
 print("Starting Detection...\n")
 
 # Load video
-cap = cv2.VideoCapture('videos/bdd-videos-sample.mov')
+#cap = cv2.VideoCapture('videos/bdd-videos-sample.mov')
+cap = cv2.VideoCapture('data/cards_office_H_T.mp4')
 ret, one_image = cap.read()
 print("Input Shape: ", one_image.shape)
 
 # Video configuration
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
-out = cv2.VideoWriter('videos/mb2_35_epochs_30.avi', fourcc, 30.0, (one_image.shape[1], one_image.shape[0]))
+out = cv2.VideoWriter('data/mb2_285_epochs.avi', fourcc, 30.0, (one_image.shape[1], one_image.shape[0]))
 frame_cnt = 0
 
 # Check if video opened successfully
@@ -107,7 +108,7 @@ while(cap.isOpened()):
 
 			i_color = int(labels[i])
 
-			cv2.rectangle(orig_image, (box[0], box[1]), (box[2], box[3]), color[i_color], 2)
+			cv2.rectangle(orig_image, (box[0], box[1]), (box[2], box[3]), color[i_color], 3)
 
 			cv2.putText(orig_image, label,
 						(box[0] - 10, box[1] - 10),

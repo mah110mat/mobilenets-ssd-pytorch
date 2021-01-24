@@ -1,6 +1,6 @@
 import os
-os.environ['CUDA_DEVICE_ORDER']='PCI_BUS_ID'
-os.environ['CUDA_VISIBLE_DEVICES']='3'
+#os.environ['CUDA_DEVICE_ORDER']='PCI_BUS_ID'
+#os.environ['CUDA_VISIBLE_DEVICES']='3'
 
 import argparse
 import logging
@@ -103,7 +103,9 @@ parser.add_argument('--checkpoint_folder', default='models/',
 logging.basicConfig(stream=sys.stdout, level=logging.INFO,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 args = parser.parse_args()
-DEVICE = torch.device("cuda:0" if torch.cuda.is_available() and args.use_cuda else "cpu")
+device_type = "cuda:0" if torch.cuda.is_available() and args.use_cuda else "cpu"
+DEVICE = torch.device(device_type)
+print("==================================================\n", device_type, args.use_cuda,torch.cuda.is_available(),"\n==========================")
 
 if args.use_cuda and torch.cuda.is_available():
     torch.backends.cudnn.benchmark = True
